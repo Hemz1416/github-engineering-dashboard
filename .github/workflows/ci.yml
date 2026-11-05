@@ -35,3 +35,4 @@ jobs:
       - name: Smoke test CLI entrypoint
         run: |
           gh-dashboard --version
+
