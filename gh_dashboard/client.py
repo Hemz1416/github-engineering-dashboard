@@ -215,10 +215,15 @@ class GitHubClient:
             return []
 
     def get_discussions_summary(self, owner: str, repo: str) -> Dict[str, Any]:
-        """Fetch repository discussion metrics via GraphQL API v4."""
+        """Fetch repository discussion metrics via GraphQL API v4.
+        
+        Properly differentiates between active discussions, disabled discussions,
+        and GraphQL query/permission/network errors rather than silently reporting zero.
+        """
         query = """
         query($owner: String!, $name: String!) {
           repository(owner: $owner, name: $name) {
+            hasDiscussionsEnabled
             discussions(first: 10, orderBy: {field: CREATED_AT, direction: DESC}) {
               totalCount
               nodes {
@@ -237,10 +242,20 @@ class GitHubClient:
         """
         try:
             data = self.graphql(query, variables={"owner": owner, "name": repo})
-            disc_data = data.get("repository", {}).get("discussions", {})
+            repo_data = data.get("repository") or {}
+            has_enabled = repo_data.get("hasDiscussionsEnabled", False)
+            disc_data = repo_data.get("discussions", {})
             return {
-                "total_discussions": disc_data.get("totalCount", 0),
-                "recent_discussions": disc_data.get("nodes", []),
+                "status": "ok" if has_enabled else "disabled",
+                "enabled": has_enabled,
+                "total_discussions": disc_data.get("totalCount", 0) if has_enabled else 0,
+                "recent_discussions": disc_data.get("nodes", []) if has_enabled else [],
             }
-        except GitHubAPIError:
-            return {"total_discussions": 0, "recent_discussions": []}
+        except GitHubAPIError as e:
+            return {
+                "status": "error",
+                "error": str(e),
+                "enabled": None,
+                "total_discussions": None,
+                "recent_discussions": [],
+            }

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Hemz1416/github-engineering-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/Hemz1416/github-engineering-dashboard/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Code Style: Clean](https://img.shields.io/badge/code%20style-pep8-green.svg)](https://www.python.org/dev/peps/pep-0008/)
 
 **GitHub Engineering Dashboard** (`gh-dashboard`) is a zero-third-party-dependency CLI tool and engineering metrics engine for engineering leads, maintainers, and developers to analyze repository health, pull request velocity, issue resolution latency (MTTR), and contributor distribution via the **GitHub REST API v3** and **GraphQL API v4**.
@@ -23,7 +23,9 @@
 
 ---
 
-## 🖥️ Live Terminal Preview
+## 🖥️ Illustrative Terminal Output (Sample Preview)
+
+> *Note: The following output is illustrative sample data demonstrating metrics computation for an open-source repository (`tiangolo/fastapi`). Run `gh-dashboard audit <owner/repo>` to generate live metrics for any repository.*
 
 ```text
 ============================================================================

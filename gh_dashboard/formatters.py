@@ -74,15 +74,22 @@ class TerminalFormatter:
         lines.append("-" * 76)
 
         # GitHub Discussions (GraphQL)
-        total_disc = discussions.get("total_discussions", 0)
+        disc_status = discussions.get("status")
         lines.append("  [COMMUNITY DISCUSSIONS (GRAPHQL API v4)]")
-        lines.append(f"    Total Discussions: {total_disc}")
-        recent_disc = discussions.get("recent_discussions", [])
-        if recent_disc:
-            lines.append("    Recent Threads:")
-            for d in recent_disc[:3]:
-                answered = " [Answered]" if d.get("isAnswered") else ""
-                lines.append(f"      • {d.get('title')[:55]}{answered}")
+        if disc_status == "error":
+            err_msg = discussions.get("error", "Query failed")
+            lines.append(f"    Status: Error querying GraphQL API ({err_msg})")
+        elif disc_status == "disabled" or discussions.get("enabled") is False:
+            lines.append("    Status: Discussions are disabled for this repository")
+        else:
+            total_disc = discussions.get("total_discussions", 0)
+            lines.append(f"    Total Discussions: {total_disc}")
+            recent_disc = discussions.get("recent_discussions", [])
+            if recent_disc:
+                lines.append("    Recent Threads:")
+                for d in recent_disc[:3]:
+                    answered = " [Answered]" if d.get("isAnswered") else ""
+                    lines.append(f"      • {d.get('title')[:55]}{answered}")
         lines.append("-" * 76)
 
         # CI / Workflow Health
@@ -122,6 +129,14 @@ class MarkdownFormatter:
         md.append(f"# Engineering Health Report: {repo_name}\n")
         md.append(f"Generated via `gh-dashboard` (REST v3 & GraphQL v4) | Target: [{repo_name}](https://github.com/{repo_name})\n")
 
+        disc_status = discussions.get("status")
+        if disc_status == "error":
+            disc_display = "Unavailable (GraphQL query error)"
+        elif disc_status == "disabled" or discussions.get("enabled") is False:
+            disc_display = "Disabled"
+        else:
+            disc_display = str(discussions.get("total_discussions", 0))
+
         # Snapshot
         md.append("## 1. Repository Snapshot\n")
         md.append("| Metric | Value |")
@@ -130,7 +145,7 @@ class MarkdownFormatter:
         md.append(f"| **Stars** | {repo.get('stargazers_count', 0)} |")
         md.append(f"| **Forks** | {repo.get('forks_count', 0)} |")
         md.append(f"| **Health Score** | **{health.get('health_score', 0)} / 100** (Grade {health.get('health_grade', 'N/A')}) |")
-        md.append(f"| **Discussions Count** | {discussions.get('total_discussions', 0)} |")
+        md.append(f"| **Discussions Count** | {disc_display} |")
         md.append(f"| **CI Success Rate** | {ci.get('success_rate_pct', 0)}% |\n")
 
         # PRs
