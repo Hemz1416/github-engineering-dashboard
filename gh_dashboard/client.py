@@ -128,3 +128,4 @@ class GitHubClient:
             return data.get("workflow_runs", []) if isinstance(data, dict) else []
         except GitHubAPIError:
             return []
+

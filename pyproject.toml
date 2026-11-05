@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "github-engineering-dashboard"
 version = "0.1.0"
 authors = [
-  { name="Hemant Ram", email="hemantram1416@gmail.com" },
+  { name="Hemant Ram" },
 ]
 description = "A lightweight engineering metrics and repository analytics CLI powered by GitHub REST and GraphQL APIs."
 readme = "README.md"
@@ -22,3 +22,4 @@ dependencies = []
 
 [project.scripts]
 gh-dashboard = "gh_dashboard.cli:main"
+

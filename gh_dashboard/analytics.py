@@ -231,3 +231,4 @@ class EngineeringAnalytics:
             "success_rate_pct": round(rate, 1),
             "recent_statuses": recent,
         }
+

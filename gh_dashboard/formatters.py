@@ -136,3 +136,4 @@ class MarkdownFormatter:
             md.append(f"| {c['check']} | {c['points']} | {icon} {c['status']} |")
 
         return "\n".join(md)
+

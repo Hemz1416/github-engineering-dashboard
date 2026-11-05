@@ -76,7 +76,7 @@ This application is built for the **GitHub Developer Program**:
 - **API Versioning:** Uses official `X-GitHub-Api-Version: 2022-11-28`.
 - **User-Agent:** Complies with GitHub API requirements (`GitHub-Engineering-Dashboard/0.1.0`).
 - **Rate Limit Safeguards:** Handles HTTP 403 / 429 rate limits gracefully with descriptive feedback.
-- **Support Contact:** `hemantram1416@gmail.com`
+- **Support & Issues:** Submit inquiries or bug reports via GitHub Issues.
 
 ---
 
@@ -92,3 +92,4 @@ python -m unittest discover -s tests -p "test_*.py"
 ## 📄 License
 
 Licensed under the [MIT License](LICENSE). Copyright © 2026 Hemant Ram.
+
