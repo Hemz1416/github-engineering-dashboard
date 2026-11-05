@@ -64,10 +64,11 @@ class TestEngineeringAnalytics(unittest.TestCase):
                 "closed_at": None,
             }
         ]
-        metrics = EngineeringAnalytics.analyze_issues(issues)
+        metrics = EngineeringAnalytics.analyze_issues(issues, total_backlog_hint=42)
         self.assertEqual(metrics["total"], 2)
         self.assertEqual(metrics["open"], 1)
         self.assertEqual(metrics["closed"], 1)
+        self.assertEqual(metrics["total_open_backlog"], 42)
         self.assertEqual(metrics["resolution_rate_pct"], 50.0)
         self.assertEqual(metrics["avg_resolution_time_hours"], 4.0)
 

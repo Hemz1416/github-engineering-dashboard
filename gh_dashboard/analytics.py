@@ -77,14 +77,15 @@ class EngineeringAnalytics:
         }
 
     @staticmethod
-    def analyze_issues(issues: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Compute issue resolution metrics and MTTR (Mean Time to Resolution)."""
+    def analyze_issues(issues: List[Dict[str, Any]], total_backlog_hint: Optional[int] = None) -> Dict[str, Any]:
+        """Compute issue resolution metrics, MTTR, and reconcile with repository backlog."""
         total = len(issues)
         if total == 0:
             return {
                 "total": 0,
                 "open": 0,
                 "closed": 0,
+                "total_open_backlog": total_backlog_hint or 0,
                 "resolution_rate_pct": 0.0,
                 "avg_resolution_time_hours": 0.0,
             }
@@ -113,6 +114,7 @@ class EngineeringAnalytics:
             "total": total,
             "open": open_count,
             "closed": closed_count,
+            "total_open_backlog": total_backlog_hint if total_backlog_hint is not None else open_count,
             "resolution_rate_pct": round(res_rate, 1),
             "avg_resolution_time_hours": round(avg_mttr, 1),
         }

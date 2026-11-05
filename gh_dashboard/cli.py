@@ -40,7 +40,7 @@ def run_audit(client: GitHubClient, owner: str, repo: str) -> dict:
     workflow_runs = client.get_workflow_runs(owner, repo, limit=10)
 
     pr_metrics = EngineeringAnalytics.analyze_pull_requests(prs)
-    issue_metrics = EngineeringAnalytics.analyze_issues(issues)
+    issue_metrics = EngineeringAnalytics.analyze_issues(issues, total_backlog_hint=repo_data.get("open_issues_count"))
     contributor_metrics = EngineeringAnalytics.analyze_contributors(contributors)
     health = EngineeringAnalytics.calculate_health_score(repo_data, community)
     ci_metrics = EngineeringAnalytics.analyze_ci_runs(workflow_runs)
