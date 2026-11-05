@@ -17,7 +17,7 @@ if _parent_dir not in sys.path:
 from gh_dashboard import __version__
 from gh_dashboard.analytics import EngineeringAnalytics
 from gh_dashboard.client import GitHubAPIError, GitHubClient, RateLimitExceededError
-from gh_dashboard.formatters import MarkdownFormatter, TerminalFormatter
+from gh_dashboard.formatters import CsvFormatter, MarkdownFormatter, TerminalFormatter
 
 
 def parse_repo_arg(repo_arg: str):
@@ -85,7 +85,7 @@ def main(args: Optional[list] = None):
     export_parser = subparsers.add_parser("export", help="Export metrics report to Markdown or JSON")
     export_parser.add_argument("repo", help="Target repository in 'owner/repo' format")
     export_parser.add_argument("--limit", type=int, default=100, help="Maximum items to evaluate")
-    export_parser.add_argument("-f", "--format", choices=["markdown", "json"], default="markdown", help="Export format")
+    export_parser.add_argument("-f", "--format", choices=["markdown", "json", "csv"], default="markdown", help="Export format")
     export_parser.add_argument("-o", "--out", help="Output file path (prints to stdout if omitted)")
 
     parsed_args = parser.parse_args(args)
@@ -132,6 +132,8 @@ def main(args: Optional[list] = None):
             data = run_audit(client, owner, repo_name, limit=parsed_args.limit)
             if parsed_args.format == "json":
                 content = json.dumps(data, indent=2, default=str)
+            elif parsed_args.format == "csv":
+                content = CsvFormatter.render_csv(data)
             else:
                 content = MarkdownFormatter.render_markdown(data)
 

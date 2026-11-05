@@ -184,3 +184,45 @@ class MarkdownFormatter:
             md.append(f"| {c['check']} | {c['points']} | {icon} {c['status']} |")
 
         return "\n".join(md)
+
+
+class CsvFormatter:
+    """Renders tabular comma-separated values (CSV) for metrics exports."""
+
+    @classmethod
+    def render_csv(cls, data: Dict[str, Any]) -> str:
+        """Render repository engineering metrics into structured CSV format."""
+        repo = data.get("repo", {})
+        pr_metrics = data.get("pr_metrics", {})
+        issue_metrics = data.get("issue_metrics", {})
+        contributor_metrics = data.get("contributor_metrics", {})
+        health = data.get("health", {})
+        ci = data.get("ci_metrics", {})
+        discussions = data.get("discussions_metrics", {})
+
+        rows = [
+            ("metric", "value"),
+            ("repository", repo.get("full_name", "")),
+            ("primary_language", repo.get("language") or ""),
+            ("stargazers_count", str(repo.get("stargazers_count", 0))),
+            ("forks_count", str(repo.get("forks_count", 0))),
+            ("health_score", str(health.get("health_score", 0))),
+            ("health_grade", health.get("health_grade", "")),
+            ("pr_evaluated_total", str(pr_metrics.get("total", 0))),
+            ("pr_merged_total", str(pr_metrics.get("merged", 0))),
+            ("pr_open_total", str(pr_metrics.get("open", 0))),
+            ("pr_merge_rate_pct", str(pr_metrics.get("merge_rate_pct", 0.0))),
+            ("pr_mttm_hours", str(pr_metrics.get("avg_merge_time_hours", 0.0))),
+            ("issues_evaluated_total", str(issue_metrics.get("total", 0))),
+            ("issues_closed_total", str(issue_metrics.get("closed", 0))),
+            ("issues_open_total", str(issue_metrics.get("open", 0))),
+            ("issues_backlog_total", str(issue_metrics.get("total_open_backlog", 0))),
+            ("issues_resolution_rate_pct", str(issue_metrics.get("resolution_rate_pct", 0.0))),
+            ("issues_mttr_hours", str(issue_metrics.get("avg_resolution_time_hours", 0.0))),
+            ("contributors_total", str(contributor_metrics.get("total_contributors", 0))),
+            ("ci_runs_evaluated_total", str(ci.get("total_runs", 0))),
+            ("ci_success_rate_pct", str(ci.get("success_rate_pct", 0.0))),
+            ("discussions_total", str(discussions.get("total_discussions") or 0)),
+        ]
+
+        return "\n".join(f"{k},{v}" for k, v in rows)
